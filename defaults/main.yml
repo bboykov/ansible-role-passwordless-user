@@ -1,0 +1,2 @@
+passwordless_user: example_user
+passwordless_user_sshkeys: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"

@@ -1,0 +1,19 @@
+- name: "Create passwordless user {{ passwordless_user }}."
+  user:
+    name: "{{ passwordless_user }}"
+    state: present
+
+- name: "Grant {{ passwordless_user }} passwordless sudo rights."
+  blockinfile:
+    dest: "/etc/sudoers.d/90-sudo-root-nopasswd-{{ passwordless_user }}-user"
+    block: |
+      {{ passwordless_user }} ALL=(ALL) NOPASSWD:ALL
+    create: yes
+
+- name: "Add authorized keys to {{ passwordless_user }}."
+  authorized_key:
+    user: "{{ passwordless_user }}"
+    key: "{{ item }}"
+    state: present
+  with_items: "{{ passwordless_user_sshkeys }}"
+
